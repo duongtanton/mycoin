@@ -4,3 +4,5 @@ flask_sqlalchemy
 python-dotenv
 wtforms
 flask-wtf
+ecdsa
+mnemonic
