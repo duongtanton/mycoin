@@ -1,0 +1,2 @@
+debug: flask --app index run --debug
+run: flask --app index run
