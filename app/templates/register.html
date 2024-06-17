@@ -29,6 +29,7 @@
         justify-content: space-between;
         align-items: center;
         background-color: #bacbde;
+        opacity: 0.98;
         width: max-content;
         border-radius: 52px;
         padding: 0 12px;
@@ -106,6 +107,11 @@
         padding: 28px 20px;
         margin-bottom: 20px;
         width: 100%;
+        cursor: pointer;
+    }
+
+    .item:hover {
+        background-color: #f2f2f2;
     }
 
     .item .title {
@@ -122,6 +128,10 @@
         background-color: transparent;
         border: thin solid #fff;
         color: #fff;
+    }
+
+    .item.transparent:hover {
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
     footer {
