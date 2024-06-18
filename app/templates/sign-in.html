@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Create A Crypto Wallet | Mobile and Browser Crypto Wallets</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css">
+    <title>Access My Crypto Wallet | Mobile and Browser Crypto Wallets</title>
 </head>
 <style>
     * {
@@ -104,7 +105,7 @@
         align-items: center;
         padding: 40px 0;
         background-color: #fff;
-        max-width: 650px;
+        max-width: 460px;
         border-radius: 10px;
         padding: 28px 20px;
         margin-bottom: 20px;
@@ -221,46 +222,56 @@
                 <a href="#">Resources</a>
                 <a href="#">Products</a>
             </div>
-            <a class="btn-login" href="/sign-in">Access my wallet </a>
+            <a class="btn-login" href="/sign-up">Create a new wallet </a>
         </div>
     </header>
     <main class="main">
         <ul class="items">
             <li class="desc">
-                <div class="title">Create a new wallet</div>
-                <div class="guide">Please select a method to create a new wallet</div>
-                <div class="ask">Already have a wallet? <a style="color: #05c0a5;" href="/sign-in">Access Wallet</a>
+                <div class="title">Access my wallet</div>
+                <div class="guide">Please select a method to access your wallet.</div>
+                <div class="ask">Don't have a wallet? <a style="color: #05c0a5;" href="/sign-up">Create Wallet</a>
                 </div>
             </li>
             <li class="item">
-                <img height="70px" width="70px" style="margin: 0 20px;" src="./extension.png" alt="">
+                <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/extension.png" alt="">
                 <div style="padding: 0 12px;">
-                    <div class="title"> Install Enkrypt browser extension </div>
-                    <div class="sub-title"> MEW’s official browser extension. Connect to web3 on Ethereum and Polkadot,
-                        manage your NFTs, buy, send and swap </div>
+                    <div class="title"> Enkrypt </div>
+                    <div class="sub-title"> Connect with Enkrypt browser extension </div>
                 </div>
             </li>
             <li class="item">
-                <img height="70px" width="70px" style="margin: 0 20px;" src="./wallet.png" alt="">
+                <img height="70px" width="70px" style="margin: 0 20px;" src="/static//images/wallet.png" alt="">
                 <div style="padding: 0 12px;">
-                    <div class="title"> Download MEW wallet app </div>
-                    <div class="sub-title"> Our official mobile app to create your wallet, and connect to MEW Web using
-                        your mobile phone </div>
+                    <div class="title"> MEW wallet app </div>
+                    <div class="sub-title"> Connect MEW Wallet app to MEW web </div>
                 </div>
             </li>
             <li class="item">
-                <img height="70px" width="70px" style="margin: 0 20px;" src="./hardware.png" alt="">
+                <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/hardware.png" alt="">
                 <div style="padding: 0 12px;">
-                    <div class="title"> Buy a hardware wallet </div>
-                    <div class="sub-title"> For the highest standard of security, buy a hardware wallet and use it with
-                        MEW </div>
+                    <div class="title"> Hardware wallets </div>
+                    <div class="sub-title"> Hardware wallets, WalletLink, Wallet </div>
+                </div>
+            </li>
+            <li class="item">
+                <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/brower.png" alt="">
+                <div style="padding: 0 12px;">
+                    <div class="title"> Browser extension </div>
+                    <div class="sub-title"> Use your Web3 wallet wallet with MEW </div>
+                </div>
+            </li>
+            <li class="item">
+                <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/mobile.png" alt="">
+                <div style="padding: 0 12px;">
+                    <div class="title"> Mobile Apps </div>
+                    <div class="sub-title"> WalletConnect, WalletLink, WalletLinks </div>
                 </div>
             </li>
             <li class="item transparent">
-                <div>
+                <div style="width: 100%;">
                     <div class="title"> Software </div>
-                    <div class="sub-title"> Software methods like Keystore File and Mnemonic Phrase should only be used
-                        in offline settings by experienced users </div>
+                    <div class="sub-title"> Keystore File, Mnemonic Phrase, and Private Key </div>
                 </div>
             </li>
         </ul>
@@ -326,6 +337,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
 </body>
 
 </html>

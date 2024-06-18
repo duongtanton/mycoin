@@ -1,11 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Ethereum (ETH) Blockchain Explorer</title>
 </head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+    }
+
+    .header {
+        position: fixed;
+        top: 0;
+        text-align: center;
+        width: 100%;
+        margin-top: 4px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #bacbde;
+        opacity: 0.98;
+        width: max-content;
+        border-radius: 52px;
+        padding: 0 12px;
+    }
+
+    .header-inner a {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 64px;
+        color: #000;
+        text-decoration: none;
+        transition: color .3s ease;
+        margin-left: 32px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .btn-login {
+        text-decoration: none;
+        padding: 8px 18px 8px 16px;
+        border-radius: 24px;
+        background-color: #000 !important;
+        color: #fff !important;
+        height: 40px;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 24px !important;
+        letter-spacing: .6px;
+        transition: opacity .3s ease;
+    }
+
+    footer {
+        background-color: #f2f2f2;
+        padding: 40px 0;
+    }
+
+    .footer-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: baseline;
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .footer-grid nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer-grid nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-grid nav li {
+        margin-bottom: 10px;
+    }
+
+    .footer-grid nav a {
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .footer-logo {
+        text-align: center;
+    }
+
+    .footer-logo a {
+        color: #333;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .footer-donation {
+        text-align: center;
+    }
+
+    .footer-donation p {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .main {
+        padding-top: 64px;
+        padding-bottom: 70px;
+        background-color: #184f90;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .search {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        width: 700px;
+        padding-top: 70px;
+    }
+
+    .search .title {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .search .input {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 48px;
+        background-color: #fff;
+        border-radius: 8px;
+    }
+
+    .search input {
+        border: none;
+        outline: none;
+    }
+
+    .search .btn-search {
+        background-color: #0784c3;
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 4px;
+        margin: 0 16px;
+        border-bottom: 1px solid #9b9898;
+    }
+
+    .block-icon {
+        color: white;
+        font-size: 18px;
+        padding: 12px;
+        margin-right: 10px;
+        background-color: #9b9898;
+    }
+
+    .block-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .block-item {
+        background-color: #fff;
+        border-radius: 10px;
+        margin: 8px;
+        height: min-content;
+    }
+
+    .block-title {
+        font-size: 15px;
+        font-weight: 600;
+        padding: 16px;
+        padding-left: 20px;
+        border-bottom: 1px solid #9b9898;
+    }
+
+    .money {
+        border-radius: 4px;
+        padding: 4px 6px !important;
+        font-weight: 600;
+        border: 1px solid #9b9898;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .view {
+        text-transform: uppercase;
+        font-weight: 500;
+        text-align: center;
+        font-size: 12px;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .view:hover {
+        background-color: #e9ecef;
+        color: #34a6df;
+        cursor: pointer;
+    }
+
+    .btn-search:hover {
+        cursor: pointer;
+        background-color: #0c5479;
+    }
+
+    .container {
+        text-align: center;
+        background: #fff;
+        margin-top: 20px;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 6rem;
+        color: #ff6347;
+    }
+
+    p {
+        font-size: 1.5rem;
+        margin: 20px 0;
+    }
+
+    .button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #ff6347;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .button:hover {
+        background-color: #e5533d;
+    }
+</style>
+
 <body>
-    404 page
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" style="display: flex; align-items: center;">
+                <svg data-v-385ace2f="" width="113" height="38" viewBox="0 0 113 32" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M16.0926 31.158C24.4641 31.158 31.2505 24.3715 31.2505 16.0001C31.2505 7.62858 24.4641 0.842163 16.0926 0.842163C7.72111 0.842163 0.934692 7.62858 0.934692 16.0001C0.934692 24.3715 7.72111 31.158 16.0926 31.158Z"
+                        fill="#1896A4"></path>
+                    <path
+                        d="M16.8729 21.0428C16.2577 21.137 15.6181 21.1247 14.9754 20.9763C12.2731 20.3525 10.5881 17.6559 11.212 14.9536C11.2581 14.754 11.3199 14.5608 11.3866 14.3717L6.64306 12.4324C6.48319 12.8548 6.35157 13.2874 6.24908 13.7272C4.99377 19.1645 8.38483 24.5913 13.8222 25.8466C15.7285 26.2868 17.632 26.1529 19.3556 25.5627L16.8729 21.0428ZM21.0933 15.4776L14.2122 15.41L25.1613 20.4557C25.4942 19.7749 25.7608 19.0442 25.9389 18.2729C27.1942 12.8356 23.8031 7.40878 18.3658 6.15348C16.1832 5.64959 14.006 5.89596 12.096 6.71969L14.6258 11.2851C15.4715 11.0211 16.3722 10.9874 17.2353 11.1875C19.3522 11.6762 20.8467 13.4386 21.0933 15.4776Z"
+                        fill="white"></path>
+                    <path
+                        d="M39.1747 5.61121V26.3887H44.2105V14.7593L48.5361 22.9838H51.1606L55.6996 14.7593V26.3887H60.6624V5.61121H55.6996L49.9199 16.101L44.4238 5.61121H39.1747ZM64.0224 5.61121H78.8884V9.86664H68.8898V13.6421H77.5045V17.7094H68.915V21.8582H79.127V26.3887H64.0224V5.61121ZM80.7326 5.61121H85.6926L92.5361 19.8287L94.3073 16L89.4147 5.61121H94.0968L96.2947 10.08L97.9957 5.61121H103.385L99.1298 16.101L100.974 19.8287L106.4 5.61121H111.907L103.245 26.3887H99.1663L96.8617 21.353L94.8743 26.3887H90.6582L80.7326 5.61121Z"
+                        fill="#0C5876"></path>
+                </svg>
+            </a>
+            <div>
+                <a href="#">Buy Crypto</a>
+                <a href="#">Swap Tokens</a>
+                <a href="#">More featuress</a>
+                <a href="#">Resources</a>
+                <a href="#">Products</a>
+            </div>
+            <a class="btn-login" href="/register">Access my wallet </a>
+        </div>
+    </header>
+    <main class="main">
+        <div class="container">
+            <h1>404</h1>
+            <p>Oops! The page you're looking for doesn't exist.</p>
+            <a href="/" class="button">Go Home</a>
+        </div>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <nav>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">How it works</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Advertise With Us</a></li>
+                        <br />
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Bug Bounty</a></li>
+                    </ul>
+                </nav>
+                <nav>
+                    <ul>
+                        <li><a href="#">MEW Mobile App</a></li>
+                        <li><a href="#">Enkrypt</a></li>
+                        <li><a href="#">MEW Portfolio Manager</a></li>
+                        <li><a href="#">ethVM</a></li>
+                        <br />
+                        <br />
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                    </ul>
+                </nav>
+                <nav>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Customer Support</a></li>
+                        <li><a href="#">Security Policy</a></li>
+                        <li><a href="#">Verify Message</a></li>
+                        <li><a href="#">Convert Units</a></li>
+                        <li><a href="#">Send Offline Helper</a></li>
+                    </ul>
+                </nav>
+                <div class="footer-donation">
+                    <p>Help us keep MEW free and open-source. Your donations go a long way towards making that possible.
+                    </p>
+                    <div class="donation-buttons">
+                        <div href="#">Ethereum Donation</div>
+                        <div href="#">Bitcoin Donation</div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="footer-copyright">
+                <p>&copy; 2024 MyEtherWallet. All rights reserved. | Pricing taken from CoinGecko.</p>
+                <p>Version: v6.9.8. | <a href="#">Join MEW Community</a></p>
+                <p>Data Tracking On</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
