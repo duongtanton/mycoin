@@ -34,11 +34,68 @@
         background-color: #0d4b7c;
         cursor: pointer;
         color: #fff;
+        font-weight: 500;
+    }
+
+    .card-2 {
+        background-image: url('/static/images/w4.png');
+        background-position: right 60px bottom -1px;
+        background-repeat: no-repeat;
+        background-size: 180px;
+    }
+
+    .block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 4px;
+        margin: 0 16px;
+        border-bottom: 1px solid #9b9898;
+    }
+
+    .block-icon {
+        color: white;
+        font-size: 18px;
+        padding: 12px;
+        margin-right: 10px;
+        background-color: #9b9898;
+    }
+
+    .block-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .block-item {
+        background-color: #fff;
+        border-radius: 10px;
+        margin: 8px;
+        height: min-content;
+    }
+
+    .block-title {
+        font-size: 15px;
+        font-weight: 600;
+        padding: 16px;
+        padding-left: 20px;
+        border-bottom: 1px solid #9b9898;
+    }
+
+    .money {
+        border-radius: 4px;
+        padding: 4px 6px !important;
+        font-weight: 600;
+        border: 1px solid #9b9898;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
     }
 </style>
 
 <body>
-    <main>
+    <main style="display: flex;">
         <div style="width: 300px; background-color: #07385f; height: 100vh;">
             <div style="padding: 20px 20px 12px;">
                 <a href="/" style="display: flex; align-items: center; padding:8px 0 16px;">
@@ -54,82 +111,195 @@
                     <div style="font-size: 14px; color: #fff;">0 ETH</div>
                 </div>
             </div>
-            <div>
+            <div style="overflow-y: overlay;">
                 <div style="color: #98adbd; padding: 10px 0;">
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
                         <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-address-card"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Portfolio </div>
+                        <div style="font-size: 16px; font-weight: 400;"> Portfolio </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
                         <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-mobile-screen-button"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Apps </div>
+                        <div style="font-size: 16px; font-weight: 400;"> Apps </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
                         <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-bars-progress"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> NFT Manager </div>
+                        <div style="font-size: 16px; font-weight: 400;"> NFT Manager </div>
                     </div>
                 </div>
                 <div class="line" style="border-top: 1px solid #ffffff38; margin: 0 20px;"></div>
                 <div style="color: #98adbd; padding: 10px 0;">
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-address-card"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Portfolio </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-shuffle"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Swap </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-mobile-screen-button"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Apps </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-paper-plane"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Send </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-bars-progress"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> NFT Manager </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-handshake-simple"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Stake </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-mobile-screen-button"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Apps </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-arrow-right"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Receive </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-bars-progress"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> NFT Manager </div>
-                    </div>
-                </div>
-                <div class="line" style="border-top: 1px solid #ffffff38; margin: 0 20px;"></div>
-                <div style="color: #98adbd; padding: 10px 0;">
-                    <div class="item"
-                        style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-address-card"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Portfolio </div>
-                    </div>
-                    <div class="item"
-                        style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-mobile-screen-button"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Apps </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-arrow-right-arrow-left"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Buy / Send </div>
                     </div>
                 </div>
                 <div class="line" style="border-top: 1px solid #ffffff38; margin: 0 20px;"></div>
                 <div style="color: #98adbd; padding: 10px 0;">
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-address-card"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Portfolio </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-id-badge"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Contract </div>
                     </div>
                     <div class="item"
                         style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
-                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-mobile-screen-button"></i>
-                        <div style="font-size: 16px; font-weight: 500;"> Apps </div>
+                        <i style="font-size: 20px; margin: 8px;" class="fa-regular fa-envelope"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Message </div>
+                    </div>
+                </div>
+                <div class="line" style="border-top: 1px solid #ffffff38; margin: 0 20px;"></div>
+                <div style="color: #98adbd; padding: 10px 0;">
+                    <div class="item"
+                        style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
+                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-gear"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Setting </div>
+                    </div>
+                    <div class="item"
+                        style="padding: 0 16px; display: flex; justify-content: flex-start; align-items: center;">
+                        <i style="font-size: 20px; margin: 8px;" class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <div style="font-size: 16px; font-weight: 400;"> Logout </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div></div>
+        <div style="flex: 1; overflow-y: overlay; height: 100vh;">
+            <div style="background-color: #f2f4fa; padding: 12px; padding-bottom: 56px;">
+                <div style="display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px 4px;">
+                    <img src="/static/images/c.png"
+                        style="height: 46px; width: 46px; padding: 8px; margin-right: 20px;">
+                    <div>
+                        <div style="font-size: 14px; color: #000; font-weight: 700;">NEW: Stake any amount of ETH
+                            powered by
+                            Coinbase</div>
+                        <div style="font-style: 14px;">Stake ETH with no minimums and start earning up to 4% APR right
+                            away;
+                            unstake at any time.</div>
+                        <div style="font-style: 14px; color: #05c0a5; font-weight: 700;">Stake now</div>
+                    </div>
+                </div>
+                <div class="card-2" style="background-color: white; border-radius: 8px; padding: 48px;">
+                    <div style="margin-bottom: 20px; font-size: 20px; font-weight: 700;">My ETH balance is empty</div>
+                    <button style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;" class="btn"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Transfer to other wallet
+                    </button>
+                    <div style="padding-top: 20px;">We accept send to other wallet
+                        <img style="width: 42px;height: 18px; padding: 0 4px;" src="/static/images/visa.png" alt="">
+                        <img style="width: 36px;height: 18px; padding: 0 4px;" src="/static/images/visa2.png" alt="">
+                    </div>
+                    <div style="padding-top: 48px;">Tip: You can also send your ETH from another wallet!</div>
+                </div>
+            </div>
+            <div
+                style="background-color: white; padding: 12px 52px; padding-bottom: 56px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="font-size: 20px; font-weight: 600; padding: 32px 0;">NFT Manager</div>
+                <ul class="block-item" style="background-color: #f2f4fa;">
+                    <li class="block-title">Latest Transactions</li>
+                    <li class="block" style="flex: 1;">
+                        <div style="display: flex;">
+                            <i class="fa-solid fa-box block-icon"></i>
+                            <div style="padding: 2px 12px;">
+                                <div style="font-size: 14px; color: #0784c3;">20118243</div>
+                                <div style="font-size: 12px;">6 secs ago</div>
+                            </div>
+                        </div>
+                        <div style="padding: 2px 12px;">
+                            <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
+                            <div style="font-size: 12px;">201 txns in 12 secs</div>
+                        </div>
+                        <div class="money" style="font-size: 10px; padding:2px 12px;">
+                            0.28311 Eth
+                        </div>
+                    </li>
+                    <li class="block" style="flex: 1;">
+                        <div style="display: flex;">
+                            <i class="fa-solid fa-box block-icon"></i>
+                            <div style="padding: 2px 12px;">
+                                <div style="font-size: 14px; color: #0784c3;">20118243</div>
+                                <div style="font-size: 12px;">6 secs ago</div>
+                            </div>
+                        </div>
+                        <div style="padding: 2px 12px;">
+                            <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
+                            <div style="font-size: 12px;">201 txns in 12 secs</div>
+                        </div>
+                        <div class="money" style="font-size: 10px; padding:2px 12px;">
+                            0.28311 Eth
+                        </div>
+                    </li>
+                    <li class="block" style="flex: 1;">
+                        <div style="display: flex;">
+                            <i class="fa-solid fa-box block-icon"></i>
+                            <div style="padding: 2px 12px;">
+                                <div style="font-size: 14px; color: #0784c3;">20118243</div>
+                                <div style="font-size: 12px;">6 secs ago</div>
+                            </div>
+                        </div>
+                        <div style="padding: 2px 12px;">
+                            <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
+                            <div style="font-size: 12px;">201 txns in 12 secs</div>
+                        </div>
+                        <div class="money" style="font-size: 10px; padding:2px 12px;">
+                            0.28311 Eth
+                        </div>
+                    </li>
+                    <li class="block-title view">View all transactions <i class="fa-solid fa-arrow-right-long"></i></li>
+                </ul>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 24px; background-color: white;">
+                <div>© 2024 MyEtherWallet. All rights reserved. Pricing taken from CoinGecko</div>
+                <div>Help Center|Bug Bounty</div>
+            </div>
+        </div>
     </main>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        style="background-color: rgba(0, 0, 0, 0.01) !important;">
+        <div class="modal-dialog" style="transform: translateY(-50%); top: calc(50% - 200px);">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Transfer To Other Wallet</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group input-group-lg" style="margin-top: 20px;">
+                        <input type="text" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-lg" placeholder="Amount">
+                    </div>
+                    <div class="input-group input-group-lg" style="margin-top: 20px;">
+                        <input type="text" class="form-control" aria-label="Sizing example input"
+                            aria-describedby="inputGroup-sizing-lg" placeholder="To Adress Wallet">
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: center;">
+                    <button type="button" style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;"
+                        class="btn">SEND</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
