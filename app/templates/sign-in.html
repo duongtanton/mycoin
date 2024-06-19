@@ -333,30 +333,58 @@
                 <h2 style="text-align: center; padding-top: 20px; padding-bottom: 40px; font-weight: 600;">Access Wallet
                     with Keystore File</h2>
                 <ul class="items" style="padding-right: 32px;">
-                    <li class="item transparent"
-                        style="color: #000; border: 1px solid #000; justify-content: space-between;">
-                        <div>
-                            <div class="title"> Keystore </div>
+                    <div class="bs-stepper" style="width: 100%;">
+                        <div class="bs-stepper-header" role="tablist">
+                            <div class="step" data-target="#create-password">
+                                <button type="button" class="step-trigger" role="tab" aria-controls="create-password"
+                                    id="create-password-trigger" style="width: 175px; text-wrap: balance;">
+                                    <span class="bs-stepper-circle">1</span>
+                                    <span class="bs-stepper-label">STEP 1. Select your Keystore File</span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#download-key">
+                                <button type="button" class="step-trigger" role="tab" aria-controls="download-key"
+                                    id="download-key-trigger" style="width: 175px; text-wrap: balance;">
+                                    <span class="bs-stepper-circle">2</span>
+                                    <span class="bs-stepper-label">STEP 2. Download keystore file</span>
+                                </button>
+                            </div>
                         </div>
-                        <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/keystore.png"
-                            alt="">
-                    </li>
-                    <li class="item transparent"
-                        style="color: #000; border: 1px solid #000; justify-content: space-between;">
-                        <div>
-                            <div class="title"> Mnemonic Phrase </div>
+                        <div class="bs-stepper-content">
+                            <div id="create-password" class="content" role="tabpanel"
+                                aria-labelledby="create-password-trigger" style="margin-top: 10px;">
+                                <div style="font-weight: 700 !important; font-size: 14px; color: #9e9e9e;">STEP 1.</div>
+                                <div
+                                    style="margin-bottom: 4px !important; font-weight: 700 !important; color: #000; font-size: 21px;">
+                                    Select your Keystore File</div>
+                                <div>Please select keystore file that unlocks your wallet.</div>
+                                <div style="text-align: center; padding-top: 40px;">
+                                    <button class="btn selected-key"
+                                        style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;">Select
+                                        File</button>
+                                </div>
+                            </div>
+                            <div id="download-key" class="content" role="tabpanel"
+                                aria-labelledby="download-key-trigger" style="color: #000;">
+                                <div style="font-weight: 700 !important; font-size: 14px; color: #9e9e9e;">STEP 2.</div>
+                                <div style="font-weight: 700 !important; color: #000; font-size: 21px;">
+                                    Enter Password</div>
+                                <div style="margin-bottom: 20px;">Enter your password to unlock your wallet.</div>
+                                <div class="input-group input-group-lg">
+                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-lg" placeholder="Password">
+                                </div>
+                                <div style="text-align: center; padding-top: 40px;">
+                                    <button class="btn btn-back btn-back-2 back-to-password"
+                                        style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;">Back</button>
+                                    <button class="btn btn-back btn-back-2 download-key"
+                                        style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;">Access
+                                        wallet </button>
+                                </div>
+                            </div>
                         </div>
-                        <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/mnemonic.png"
-                            alt="">
-                    </li>
-                    <li class="item transparent"
-                        style="color: #000; border: 1px solid #000; justify-content: space-between;">
-                        <div>
-                            <div class="title"> Private Key </div>
-                        </div>
-                        <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/privatekey.png"
-                            alt="">
-                    </li>
+                    </div>
                     <div class="item" style="background: #fff2dc; color: #000; margin-top: 20px;">
                         <img height="70px" width="70px" style="margin: 0 20px;" src="/static/images/warning.png" alt="">
                         <div>
@@ -513,6 +541,8 @@
     </footer>
     <script>
         $(document).ready(function () {
+            var stepper = new Stepper($('.bs-stepper')[0])
+            stepper.to(1)
             $('.software').click(function () {
                 $('#step-1').hide();
                 $('#step-2').show();
@@ -528,6 +558,15 @@
             $('.privatekey').click(function () {
                 $('#step-2').hide();
                 $('#privatekey').show();
+            });
+            $('.selected-key').click(function () {
+                stepper.next()
+            });
+            $('.back-to-password').click(function () {
+                stepper.previous()
+            });
+            $('.download-key').click(function () {
+                window.location.href = '/wallet';
             });
         });
     </script>
