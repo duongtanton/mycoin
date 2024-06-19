@@ -18,3 +18,7 @@ def signUp():
 @bp.get('/history')
 def history():
     return render_template('history.html')
+
+@bp.get('/wallet')
+def wallet():
+    return render_template('wallet.html')
