@@ -1,82 +1,365 @@
-import json
+import os
 import time
-from app.core.transaction import Transaction
-from app.core.wallet import Wallet
+import json
+import bcrypt
+import base58
+import hashlib
+import ecdsa
+from hashlib import sha256
+from datetime import datetime
+from random import randint
+  
+DATE = datetime.now()
+GENESIS_BLOCK = {
+    "Index": 0,
+    "Timestamp": str(DATE),
+    # "BPM": 0, #instead of transactions
+    "Transactions": [],
+    "PrevHash": "",
+    "Validator": "" #address to receive the reward {validator, weight, age}
+}
+GENESIS_BLOCK2 = {
+    "Index": 0,
+    "Timestamp": str(DATE),
+    # "BPM": 0, #instead of transactions
+    "Transactions": [],
+    "PrevHash": "",
+    "Validator": "" #address to receive the reward {validator, weight, age}
+}
+GENESIS_BLOCK3 = {
+    "Index": 0,
+    "Timestamp": str(DATE),
+    # "BPM": 0, #instead of transactions
+    "Transactions": [],
+    "PrevHash": "",
+    "Validator": "" #address to receive the reward {validator, weight, age}
+}
+
+GENESIS_BLOCK4 = {
+    "Index": 0,
+    "Timestamp": str(DATE),
+    # "BPM": 0, #instead of transactions
+    "Transactions": [],
+    "PrevHash": "",
+    "Validator": "" #address to receive the reward {validator, weight, age}
+}
 
 
-class Blockchain:
-    def __init__(self):
-        self.chain = []
-        self.current_transactions = []
-        self.wallets = {}
+class Blockchain(object):
+    
+    def __init__(self, _genesisBlock, account):
+        """
+            If the genesis block is valid, create chain
+        """
+        self.blockChain = []
+        self.tempBlocks = []
+        #self.candidateBlocks = [] #constains block
+        self.myCurrBlock = {}
+        #self.announcements = []
+        self.validators = set() # stakers and balance
+        #self.unconfirmed_txns = []
+        self.nodes = set()
+        self.myAccount = {'Address': '', 'Weight': 0, 'Age': 0}
+        self.myAccount['Address'] = account['Address']
+        self.myAccount['Weight'] = account['Weight']
+        self.unconfirmed_txns = []
 
-    def create_genesis_block(self):
-        self.new_block(previous_hash='0')
+        try:
+            genesisBlock = self.generate_genesis_block(_genesisBlock)
+            if self.is_block_valid(genesisBlock):
+                self.blockChain.append(genesisBlock)
+            else:   
+                raise Exception('Unable to verify block')
+        except Exception as e:
+            print('Invalid genesis block.\nOR\n' + str(e))
 
-    def new_block(self, previous_hash):
-        block = {
-            'index': len(self.chain),
-            'timestamp': int(time.time()),
-            'transactions': self.current_transactions,
-            'previous_hash': previous_hash
-        }
-        self.chain.append(block)
-        self.current_transactions = []
-        return block
-
-    def add_wallet(self, wallet):
-        self.wallets[wallet.address] = wallet
-
-    def get_wallet_by_address(self, address):
-        return self.wallets.get(address)
-
-    def new_transaction(self, sender_address, receiver_address, amount, sender_private_key):
-        sender_wallet = self.get_wallet_by_address(sender_address)
-        receiver_wallet = self.get_wallet_by_address(receiver_address)
-
-        if sender_wallet is None or receiver_wallet is None:
+    def is_block_valid(self, block, prevBlock={}):
+        try:
+            _hash = block.pop('Hash')
+        except KeyError as e:
             return False
+        try:
+            hash2 = self.hasher(block)
+            assert _hash == hash2
+        except AssertionError as e:
+            return False
+            
+        prevHash = prevBlock['Hash'] if prevBlock else ''
+        block['Hash'] = _hash
+        if self.blockChain:
+            prevHash = self.blockChain[-1]['Hash'] if not prevHash else prevHash
+            try:
+                assert prevHash == block["PrevHash"]
+            except AssertionError as e:
+                if prevHash == self.blockChain[0]['Hash']:
+                    block['Hash'] = _hash
+                    return True
+                block['Hash'] = _hash
+                return False
+        block['Hash'] = _hash
+        return True
+
+    def generate_new_block(self, bpm=randint(53, 63), oldBlock='', address=''):
+        if self.myCurrBlock:
+            return self.myCurrBlock
+        prevHash = self.blockChain[-1]['Hash']
+        index = len(self.blockChain) if not oldBlock else oldBlock['Index'] + 1
+        address =  self.get_validator(self.myAccount) if not address else address
+        newBlock = {
+            "Index": index,
+            "Timestamp": str(datetime.now()),
+            # "BPM": bpm, #instead of transactions
+            "Transactions": self.unconfirmed_txns,
+            "PrevHash": prevHash,
+            "Validator": address
+        }
+        newBlock["Hash"] = self.hasher(newBlock)
+        assert self.is_block_valid(newBlock)
+        self.myCurrBlock = newBlock
+        self.unconfirmed_txns = [] 
+        return newBlock
+
+    def add_transaction(self, sender, receiver, amount):
+        transaction = {
+            'sender': sender,
+            'receiver': receiver,
+            'amount': amount,
+            'timestamp': str(datetime.now())
+        }
+        self.unconfirmed_txns.append(transaction)
         
-        transaction = Transaction(sender_address, receiver_address, amount)
-        transaction.sign_transaction(sender_private_key)
+    def get_blocks_from_nodes(self):
+        if self.nodes:
+            for node in self.nodes:
+                #resp = requests.get('http://{}/newblock'.format(node))
+                node.add_another_block(self.myCurrBlock)
+                resp = node.generate_new_block()
+                if self.is_block_valid(resp): #resp.json()
+                    #self.tempBlocks.append(resp.json())
+                    if not resp['Validator'] in self.validators:
+                        self.tempBlocks.append(resp)
+                        self.validators.add(resp['Validator'])
 
-        if transaction.verify_transaction():
-            self.current_transactions.append(transaction)
-            sender_wallet.balance -= amount
-            receiver_wallet.balance += amount
-            sender_wallet.add_transaction_to_history(transaction)
-            receiver_wallet.add_transaction_to_history(transaction)
-            return True
-        return False
+    def add_another_block(self, another_block):
+        if self.is_block_valid(another_block):
+            if not another_block['Validator'] in self.validators:
+                self.tempBlocks.append(another_block)
+                self.validators.add(another_block['Validator'])
 
-    def get_wallet_statistics(self, address):
-        wallet = self.get_wallet_by_address(address)
-        if wallet:
-            return {
-                'address': wallet.address,
-                'balance': wallet.balance,
-                'transaction_history': [vars(tx) for tx in wallet.transaction_history]
-            }
-        else:
-            return None
+    def pick_winner(self):
+        """Creates a lottery pool of validators and choose the validator
+            who gets to forge the next block. Random selection weighted by amount of token staked
 
-# Example usage
-blockchain = Blockchain()
+            Do this every 30 seconds
+        """
+        winner = []
 
-# Create wallets
-wallet1 = Wallet()
-wallet2 = Wallet()
+        self.tempBlocks.append(self.myCurrBlock)
+        self.validators.add(self.myCurrBlock['Validator'])
+        for validator in self.validators:
+            acct = (validator.rsplit(sep=', '))
+            acct.append(int(acct[1]) * int(acct[2]))
+            if winner and acct[-1]:
+                winner = acct if winner[-1] < acct[-1] else winner
+            else:
+                winner = acct if acct[-1] else winner
+        if winner:
+            return winner
+        for validator in self.validators:
+            acct = (validator.rsplit(sep=', '))
+            acct.append((int(acct[1]) + int(acct[2]))/len(acct[0]))
+            if winner:
+                winner = acct if winner[-1] < acct[-1] else winner
+            else:
+                winner = acct
+        return winner
 
-blockchain.add_wallet(wallet1)
-blockchain.add_wallet(wallet2)
+    def pos(self):
+        """
+        #get other's stakes
+        #add owns claim
+        #pick winner
+        """
 
-# Perform transactions
-wallet1.balance = 100
-blockchain.new_transaction(wallet1.address, wallet2.address, 30, wallet1.private_key)
+        print(str(self.myAccount) + ' =======================> Getting Valid chain\n')
+        self.resolve_conflict()
+        time.sleep(1)
+        self._pos()
+        print('***Calling other nodes to announce theirs***' + "\n")
+        time.sleep(1)
+        for node in self.nodes:
+            node._pos()
+        time.sleep(1)
+        for block in self.tempBlocks:
+            validator = block['Validator'].rsplit(', ')
+            if validator[0] == self.pick_winner()[0]:
+                new_block = block
+                break
+            else:
+                pass
+        print('New Block ====> ' + str(new_block) + "\n")
+        time.sleep(1)
+        self.add_new_block(new_block)
+        for node in self.nodes:
+            node.add_new_block(new_block)
+        print('Process ends' + "\n")
+        
+    def announce_winner(self):
+        self.blockChain.append(self.myCurrBlock)
 
-# View wallet statistics
-wallet1_stats = blockchain.get_wallet_statistics(wallet1.address)
-if wallet1_stats:
-    print(f"Wallet 1 Statistics:\n{json.dumps(wallet1_stats, indent=4)}")
-else:
-    print("Wallet not found.")
+    def add_new_block(self, block):
+        if self.is_block_valid(block):
+            #check index too
+            self.blockChain.append(block)
+            acct = block['Validator'].rsplit(', ')
+            if self.myAccount['Address'] != acct[0]:
+                self.myAccount['Age'] += 1
+            else:
+                self.myAccount['Weight'] += (randint(1, 10) * self.myAccount['Age'])
+                self.myAccount['Age'] = 0
+        self.tempBlocks = []
+        self.myCurrBlock = {}
+        self.validators = set()
+
+    def _pos(self):
+        print("Coming from ==========================> " + str(self.myAccount) + "\n")
+        time.sleep(1)
+        print('***Generating new stake block***' + "\n")
+        time.sleep(1)
+        self.generate_new_block()
+        print('***Exchanging temporary blocks with other nodes***' + "\n")
+        time.sleep(1)
+        self.get_blocks_from_nodes()
+        print('***Picking a winner***' + "\n")
+        time.sleep(1)
+        print("Winner is =======================> " + str(self.pick_winner()) + "\n")
+    
+    def resolve_conflict(self):
+        for node in self.nodes:
+            if len(node.blockChain) > len(self.blockChain):
+                if self.is_chain_valid(node.blockChain):
+                    print('***Replacing node***' + "\n")
+                    self.blockChain = node.blockChain
+                    return
+        print('***My chain is authoritative***' + "\n")
+        return
+
+    def is_chain_valid(self, chain):
+        _prevBlock = ''
+        for block in chain:
+            if self.is_block_valid(block, prevBlock=_prevBlock):
+                _prevBlock = block
+            else:
+                return False
+        return True
+
+    def add_new_node(self, new_node):
+        self.nodes.add(new_node)
+        new_node.add_another_node(self)
+
+    def add_another_node(self, another_node):
+        self.nodes.add(another_node)
+
+    @staticmethod
+    def hasher(block):
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return sha256(block_string).hexdigest()
+
+    @staticmethod
+    def get_validator(address):
+        return ', '.join([address['Address'], str(address['Weight']), str(address['Age'])])
+
+    def generate_genesis_block(self, genesisblock):
+        address = {'Address': 'eltneg', 'Weight': 50, 'Age': 0}
+        address = self.get_validator(address)
+        genesisblock['Index'] = 0 if not genesisblock['Index'] else genesisblock['Index']
+        genesisblock['Timestamp'] = str(datetime.now()) if not genesisblock['Timestamp'] else genesisblock['Timestamp']
+        # genesisblock['BPM'] = 0 if not genesisblock['BPM'] else genesisblock['BPM']
+        genesisblock['Transactions'] = []
+        genesisblock['PrevHash'] = '0000000000000000'
+        genesisblock['Validator'] = address if not genesisblock['Validator'] else genesisblock['Validator']
+        genesisblock['Hash'] = self.hasher(genesisblock)
+        return genesisblock       
+
+def generate_wallet(password):
+    # Generate a new ECDSA private key
+    private_key = os.urandom(32)
+    sk = ecdsa.SigningKey.from_string(private_key, curve=ecdsa.SECP256k1)
+    vk = sk.get_verifying_key()
+
+    # Generate the public key
+    public_key = b'\04' + vk.to_string()
+
+    # Hash the public key with SHA-256, then with RIPEMD-160
+    sha256_bpk = hashlib.sha256(public_key).digest()
+    ripemd160_bpk = hashlib.new('ripemd160', sha256_bpk).digest()
+
+    # Prepend network byte
+    network_byte = b'\x00'
+    network_bpk = network_byte + ripemd160_bpk
+
+    # Double hash the network byte public key
+    sha256_nbpk = hashlib.sha256(network_bpk).digest()
+    sha256_2_nbpk = hashlib.sha256(sha256_nbpk).digest()
+
+    # Get the checksum
+    checksum = sha256_2_nbpk[:4]
+
+    # Append the checksum to the network byte public key
+    address = base58.b58encode(network_bpk + checksum)
+
+    # Encrypt the private key with the password
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    encrypted_private_key = bcrypt.hashpw(private_key, password_hash)
+
+    wallet = {
+        'address': address.decode(),
+        'encrypted_private_key': encrypted_private_key.decode(),
+        'password_hash': password_hash.decode()
+    }
+
+    return wallet
+  
+def main():
+    """Run test"""
+    account = {'Address': 'eltneg', 'Weight': 50}
+    account2 = {'Address': 'account2', 'Weight': 55}
+    account3 = {'Address': 'account3', 'Weight': 43}
+    account4 = {'Address': 'account4', 'Weight': 16}
+    blockchain = Blockchain(GENESIS_BLOCK, account)
+    blockchain.generate_new_block(52)
+
+    blockchain2 = Blockchain(GENESIS_BLOCK2, account2)
+    blockchain3 = Blockchain(GENESIS_BLOCK3, account3)
+
+    clients = [blockchain, blockchain2, blockchain3]
+    
+    blockchain.add_new_node(blockchain2)
+    blockchain.add_new_node(blockchain3)
+
+    blockchain2.add_new_node(blockchain)
+    blockchain2.add_new_node(blockchain3)
+
+    blockchain.get_blocks_from_nodes()
+    blockchain2.get_blocks_from_nodes()
+
+    blockchain.pick_winner()
+    #check if temp blocks are same
+
+    blockchain.pos()
+    blockchain2.pos()
+    blockchain3.pos()
+
+    blockchain4 = Blockchain(GENESIS_BLOCK4, account4)
+    blockchain4.add_new_node(blockchain)
+    blockchain4.add_new_node(blockchain2)
+    blockchain4.add_new_node(blockchain3)
+    blockchain4.pos()
+    clients.append(blockchain4)
+    while True:
+        print('============================================ \n\n')
+        client = clients[randint(0, 3)]
+        client.pos()
+
+# if __name__ == '__main__':
+#     main()

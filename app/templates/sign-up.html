@@ -492,11 +492,11 @@
                                     style="margin-bottom: 20px !important; font-weight: 700 !important; color: #000; font-size: 21px;">
                                     Write down these words</div>
                                 <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                    <input type="password" class="form-control" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-lg" placeholder="Password">
                                 </div>
                                 <div class="input-group input-group-lg" style="margin-top: 20px;">
-                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                    <input type="password" class="form-control" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-lg" placeholder="Confirm password">
                                 </div>
                                 <div style="text-align: center; padding-top: 40px;">
@@ -680,8 +680,30 @@
             $(".back-to-password-2").click(function () {
                 stepper2.previous()
             })
-            $(".download-key").click(function () {
-                stepper.next()
+            $(".download-key").click(async function () {
+                const body = {
+                    password: $("input[placeholder='Password']").val()
+                }
+                const password = $("input[placeholder='Password']").val()
+                const response = await fetch("/sign-up", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                })
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const contentDisposition = response.headers.get('Content-Disposition');
+                const filename = contentDisposition.split('filename=')[1];
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename || 'wallet';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                stepper2.next()
             })
             $(".download-key-2").click(function () {
                 stepper2.next()
