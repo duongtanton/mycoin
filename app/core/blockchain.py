@@ -8,7 +8,12 @@ import ecdsa
 from hashlib import sha256
 from datetime import datetime
 from random import randint
-  
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import base64
+
 DATE = datetime.now()
 GENESIS_BLOCK = {
     "Index": 0,
@@ -282,43 +287,80 @@ class Blockchain(object):
         return genesisblock       
 
 def generate_wallet(password):
-    # Generate a new ECDSA private key
     private_key = os.urandom(32)
     sk = ecdsa.SigningKey.from_string(private_key, curve=ecdsa.SECP256k1)
     vk = sk.get_verifying_key()
 
-    # Generate the public key
     public_key = b'\04' + vk.to_string()
 
-    # Hash the public key with SHA-256, then with RIPEMD-160
     sha256_bpk = hashlib.sha256(public_key).digest()
     ripemd160_bpk = hashlib.new('ripemd160', sha256_bpk).digest()
 
-    # Prepend network byte
     network_byte = b'\x00'
     network_bpk = network_byte + ripemd160_bpk
 
-    # Double hash the network byte public key
     sha256_nbpk = hashlib.sha256(network_bpk).digest()
     sha256_2_nbpk = hashlib.sha256(sha256_nbpk).digest()
 
-    # Get the checksum
     checksum = sha256_2_nbpk[:4]
 
-    # Append the checksum to the network byte public key
     address = base58.b58encode(network_bpk + checksum)
 
-    # Encrypt the private key with the password
-    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    encrypted_private_key = bcrypt.hashpw(private_key, password_hash)
+    # Generate a salt
+    salt = os.urandom(16)
+
+    # Derive a key from the password
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = kdf.derive(password.encode())
+
+    # Encrypt the private key with the derived key using AES-GCM
+    iv = os.urandom(12)
+    cipher = Cipher(algorithms.AES(key), modes.GCM(iv), backend=default_backend())
+    encryptor = cipher.encryptor()
+    encrypted_private_key = encryptor.update(private_key) + encryptor.finalize()
+    tag = encryptor.tag
 
     wallet = {
         'address': address.decode(),
-        'encrypted_private_key': encrypted_private_key.decode(),
-        'password_hash': password_hash.decode()
+        'encrypted_private_key': base64.b64encode(encrypted_private_key).decode(),
+        'salt': base64.b64encode(salt).decode(),
+        'iv': base64.b64encode(iv).decode(),
+        'tag': base64.b64encode(tag).decode()
     }
 
     return wallet
+  
+def verify_password(wallet, password):
+    encrypted_private_key = base64.b64decode(wallet['encrypted_private_key'])
+    salt = base64.b64decode(wallet['salt'])
+    iv = base64.b64decode(wallet['iv'])
+    tag = base64.b64decode(wallet['tag'])
+
+    # Derive a key from the password
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = kdf.derive(password.encode())
+
+    # Decrypt the private key with the derived key using AES-GCM
+    cipher = Cipher(algorithms.AES(key), modes.GCM(iv, tag), backend=default_backend())
+    decryptor = cipher.decryptor()
+    try:
+        private_key = decryptor.update(encrypted_private_key) + decryptor.finalize()
+        return True
+    except Exception as e:
+        print(f"Error decrypting private key: {e}")
+        return False
   
 def main():
     """Run test"""

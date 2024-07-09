@@ -359,10 +359,10 @@
                                     style="margin-bottom: 4px !important; font-weight: 700 !important; color: #000; font-size: 21px;">
                                     Select your Keystore File</div>
                                 <div>Please select keystore file that unlocks your wallet.</div>
+                                <input type="file" class="file" />
                                 <div style="text-align: center; padding-top: 40px;">
                                     <button class="btn selected-key"
-                                        style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;">Select
-                                        File</button>
+                                        style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;">Next</button>
                                 </div>
                             </div>
                             <div id="download-key" class="content" role="tabpanel"
@@ -372,7 +372,7 @@
                                     Enter Password</div>
                                 <div style="margin-bottom: 20px;">Enter your password to unlock your wallet.</div>
                                 <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                    <input type="password" class="form-control" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-lg" placeholder="Password">
                                 </div>
                                 <div style="text-align: center; padding-top: 40px;">
@@ -560,13 +560,41 @@
                 $('#privatekey').show();
             });
             $('.selected-key').click(function () {
+                if ($(".file").val() == "") {
+                    alert("Please select a file");
+                    return;
+                }
                 stepper.next()
             });
             $('.back-to-password').click(function () {
                 stepper.previous()
             });
             $('.download-key').click(function () {
-                window.location.href = '/wallet';
+                if (!$("input[placeholder='Password']").val()) {
+                    alert("Please enter password");
+                    return;
+                }
+                const fileInput = document.querySelector('.file');
+                const file = fileInput.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('password', $("input[placeholder='Password']").val());
+                fetch("/sign-in", {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data?.success){
+                            window.location.href = '/wallet';
+                        } else {
+                            alert("Invalid password");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
             });
         });
     </script>

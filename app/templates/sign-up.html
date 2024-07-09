@@ -369,11 +369,11 @@
                                     style="margin-bottom: 20px !important; font-weight: 700 !important; color: #000; font-size: 21px;">
                                     Create password</div>
                                 <div class="input-group input-group-lg">
-                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                    <input type="password" class="form-control" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-lg" placeholder="Password">
                                 </div>
                                 <div class="input-group input-group-lg" style="margin-top: 20px;">
-                                    <input type="text" class="form-control" aria-label="Sizing example input"
+                                    <input type="password" class="form-control" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-lg" placeholder="Confirm password">
                                 </div>
                                 <div style="text-align: center; padding-top: 40px;">
@@ -703,7 +703,7 @@
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
-                stepper2.next()
+                stepper.next()
             })
             $(".download-key-2").click(function () {
                 stepper2.next()
