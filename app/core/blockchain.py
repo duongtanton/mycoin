@@ -104,7 +104,7 @@ class Blockchain(object):
         block['Hash'] = _hash
         return True
 
-    def generate_new_block(self, bpm=randint(53, 63), oldBlock='', address=''):
+    def generate_new_block(self, oldBlock='', address=''):
         if self.myCurrBlock:
             return self.myCurrBlock
         prevHash = self.blockChain[-1]['Hash']
@@ -369,7 +369,9 @@ def main():
     account3 = {'Address': 'account3', 'Weight': 43}
     account4 = {'Address': 'account4', 'Weight': 16}
     blockchain = Blockchain(GENESIS_BLOCK, account)
-    blockchain.generate_new_block(52)
+    blockchain.add_transaction('eltneg', 'account2', 10)
+    blockchain.add_transaction('eltneg', 'account3', 20)
+    blockchain.generate_new_block()
 
     blockchain2 = Blockchain(GENESIS_BLOCK2, account2)
     blockchain3 = Blockchain(GENESIS_BLOCK3, account3)
@@ -403,5 +405,5 @@ def main():
         client = clients[randint(0, 3)]
         client.pos()
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
