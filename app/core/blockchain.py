@@ -15,6 +15,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import base64
 
 DATE = datetime.now()
+clients = []
 GENESIS_BLOCK = {
     "Index": 0,
     "Timestamp": str(DATE),
@@ -39,7 +40,6 @@ GENESIS_BLOCK3 = {
     "PrevHash": "",
     "Validator": "" #address to receive the reward {validator, weight, age}
 }
-
 GENESIS_BLOCK4 = {
     "Index": 0,
     "Timestamp": str(DATE),
@@ -48,7 +48,6 @@ GENESIS_BLOCK4 = {
     "PrevHash": "",
     "Validator": "" #address to receive the reward {validator, weight, age}
 }
-
 
 class Blockchain(object):
     
@@ -362,7 +361,7 @@ def verify_password(wallet, password):
         print(f"Error decrypting private key: {e}")
         return False
   
-def main():
+def init_blockchain():
     """Run test"""
     account = {'Address': 'eltneg', 'Weight': 50}
     account2 = {'Address': 'account2', 'Weight': 55}
@@ -401,9 +400,42 @@ def main():
     blockchain4.pos()
     clients.append(blockchain4)
     while True:
+        time.sleep(5)
         print('============================================ \n\n')
         client = clients[randint(0, 3)]
         client.pos()
 
+def add_new_transaction(sender, receiver, amount):
+    client = clients[randint(0, 3)]
+    client.add_transaction(sender, receiver, amount)
+    
+def get_transactions(sender):
+    transactions = []
+    client = clients[randint(0, 3)]    
+    for block in client.blockChain:
+        for transaction in block['Transactions']:
+            if transaction['sender'] == sender:
+                transactions.append(transaction)
+    return transactions
+                    
+def get_balance(address):
+    balance = 0
+    client = clients[randint(0, 3)]
+    for block in client.blockChain:
+        for transaction in block['Transactions']:
+            if transaction['receiver'] == address:
+                balance += transaction['amount']
+            if transaction['sender'] == address:
+                balance -= transaction['amount']
+    return balance     
+               
+def get_all_transactions():
+    transactions = []
+    client = clients[randint(0, 3)]
+    for block in client.blockChain:
+        for transaction in block['Transactions']:
+            transactions.append(transaction)
+    return transactions                    
+    
 if __name__ == '__main__':
-    main()
+    init_blockchain()
