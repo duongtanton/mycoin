@@ -264,7 +264,6 @@
                 <a href="#">More featuress</a>
                 <a href="#">Resources</a>
                 <a href="#">Products</a>
-                <a href="/sign-up">New wallet</a>
             </div>
             <a class="btn-login" href="/sign-in">Access my wallet </a>
         </div>
@@ -291,108 +290,44 @@
         <div class="block-wrapper">
             <ul class="block-item">
                 <li class="block-title">Latest Blocks</li>
+                {%- for b in blocks %}
                 <li class="block" style="flex: 1;">
                     <i class="fa-solid fa-box block-icon"></i>
                     <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
+                        <div style="font-size: 14px; color: #0784c3;">{{b.id}}</div>
+                        <div style="font-size: 12px;">{{b.timestamp}}</div>
                     </div>
                     <div style="padding: 2px 12px;">
                         <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
+                        <div style="font-size: 12px;">{{b.data|length}} txts</div>
                     </div>
                     <div class="money" style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
+                        {{b.total_amount}} Eth
                     </div>
                 </li>
-                <li class="block" style="flex: 1;">
-                    <i class="fa-solid fa-box block-icon"></i>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
-                    </div>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
-                    </div>
-                    <div class="money" style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
-                    </div>
-                </li>
-                <li class="block" style="flex: 1;">
-                    <i class="fa-solid fa-box block-icon"></i>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
-                    </div>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
-                    </div>
-                    <div class="money" style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
-                    </div>
-                </li>
-                <li class="block" style="flex: 1;">
-                    <i class="fa-solid fa-box block-icon"></i>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
-                    </div>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
-                    </div>
-                    <div class="money" style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
-                    </div>
-                </li>
+                {% endfor %}
                 <li class="block-title view">View all blocks <i class="fa-solid fa-arrow-right-long"></i></li>
             </ul>
             <ul class="block-item">
                 <li class="block-title">Latest Transactions</li>
+                {%- for t in transactions %}
                 <li class="block" style="flex: 1;">
-                    <i class="fa-solid fa-box block-icon"></i>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
+                    <div style="display: flex;">
+                        <i class="fa-solid fa-box block-icon"></i>
+                        <div style="padding: 2px 12px;">
+                            <div style="font-size: 14px; color: #0784c3;">{{t.id}}</div>
+                            <div style="font-size: 12px;">{{t.timestamp}}</div>
+                        </div>
                     </div>
                     <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
+                        <div style="font-size: 14px; color: #0784c3;">From {{t.sender}}</div>
+                        <div style="font-size: 12px;">To {{t.receiver}}</div>
                     </div>
                     <div class="money" style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
+                        {{t.amount}} Eth
                     </div>
                 </li>
-                <li class="block" style="flex: 1;">
-                    <i class="fa-solid fa-box block-icon"></i>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
-                    </div>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
-                    </div>
-                    <div class="money" style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
-                    </div>
-                </li>
-                <li class="block" style="flex: 1;">
-                    <i class="fa-solid fa-box block-icon"></i>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">20118243</div>
-                        <div style="font-size: 12px;">6 secs ago</div>
-                    </div>
-                    <div style="padding: 2px 12px;">
-                        <div style="font-size: 14px; color: #0784c3;">Fee Recipient beaverbuild</div>
-                        <div style="font-size: 12px;">201 txns in 12 secs</div>
-                    </div>
-                    <div style="font-size: 10px; padding:2px 12px;">
-                        0.28311 Eth
-                    </div>
-                </li>
+                {% endfor %}
                 <li class="block-title view">View all transactions <i class="fa-solid fa-arrow-right-long"></i></li>
             </ul>
         </div>
