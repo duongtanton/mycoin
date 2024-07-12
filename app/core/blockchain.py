@@ -13,8 +13,25 @@ import base64
 
 blockChain = None            
 
+class Transaction:
+    def __init__(self, sender, receiver, amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+        self.timestamp = time.time()
+        self.id = time.time()
+        
+    def to_dict(self):
+        return {
+            "sender": self.sender,
+            "receiver": self.receiver,
+            "amount": self.amount,
+            "timestamp": self.timestamp,
+            "id": self.id
+        }
+
 class Block:
-    def __init__(self, data):
+    def __init__(self, data:list[Transaction]):
         self.data = data
         self.prev_hash = ""
         self.hash = ""
@@ -26,20 +43,26 @@ class Block:
     def get_total_amount(self):
         total = 0
         for transaction in self.data:
-            total += transaction["amount"]
+            total += int(transaction.amount)
         return total
+class TransactionEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Transaction):
+            return obj.to_dict()
+        return super().default(obj)
 
 def hash(block):
-    data = json.dumps(block.data) + block.prev_hash + str(block.none)
+    data = json.dumps(block.data, cls=TransactionEncoder) + block.prev_hash + str(block.none)
     data = data.encode("utf-8")
     return sha256(data).hexdigest()
 
 class BlockChain:
     def __init__(self):
-        self.chain = []
+        self.chain:list[Block] = []
         block = Block([])
         block.hash = hash(block)
         self.chain.append(block)
+        self.temp_data:list[Transaction] = []
         
     def add_block(self, data):
         block = Block(data)
@@ -48,7 +71,8 @@ class BlockChain:
             block.none += 1
             block.hash = hash(block)
         block.hash = hash(block)
-        self.chain.append(block)    
+        self.chain.append(block)   
+        self.temp_data = [] 
 
     def is_valid(self):
         for i in range(1, len(self.chain)):
@@ -62,10 +86,10 @@ class BlockChain:
         balance = 0
         for block in self.chain:
             for transaction in block.data:
-                if transaction["sender"] == address:
-                    balance -= transaction["amount"]
-                if transaction["receiver"] == address:
-                    balance += transaction["amount"]
+                if transaction.sender == address:
+                    balance -= int(transaction.amount)
+                if transaction.receiver == address:
+                    balance += int(transaction.amount)
         return balance
      
     def get_blocks(self):
@@ -78,10 +102,13 @@ class BlockChain:
         transactions = []
         for block in self.chain:
             for transaction in block.data:
-                if transaction["sender"] == address or transaction["receiver"] == address or address == None:
+                if transaction.sender == address or transaction.receiver == address or address == None:
                     transactions.insert(0, transaction)
         return transactions              
-                  
+     
+    def add_transaction(self, transaction):
+        self.temp_data.append(transaction)
+
 def generate_wallet(password):
     private_key = os.urandom(32)
     sk = ecdsa.SigningKey.from_string(private_key, curve=ecdsa.SECP256k1)
@@ -161,11 +188,13 @@ def verify_password(wallet, password):
 def init_blockchain():
     global blockChain
     blockChain = BlockChain()
-    blockChain.add_block([{
-        "id": time.time(),
-        "sender": "tonduong", 
-        "receiver": "17qyQFhvqDurYVmqjWJMKTwBfQNWZx32B", 
-        "amount": 100,
-        "timestamp": time.time()
-    }])
+    blockChain.add_block([Transaction("tonduong", "17qyQFhvqDurYVmqjWJMKTwBfQNWZx32B", 100)])
+    while True:
+        time.sleep(5)
+        print("Checking for new transactions")
+        if len(blockChain.temp_data) > 0:
+            print("New transactions found")
+            blockChain.add_block(blockChain.temp_data)
+    
+    
    

@@ -258,17 +258,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="input-group input-group-lg" style="margin-top: 20px;">
-                        <input type="text" class="form-control" aria-label="Sizing example input"
+                        <input type="number" class="form-control amount" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-lg" placeholder="Amount">
                     </div>
                     <div class="input-group input-group-lg" style="margin-top: 20px;">
-                        <input type="text" class="form-control" aria-label="Sizing example input"
+                        <input type="text" class="form-control receiver" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-lg" placeholder="To Adress Wallet">
                     </div>
                 </div>
                 <div class="modal-footer" style="justify-content: center;">
                     <button type="button" style="padding: 0 46px; height: 62px;background-color: #05c0a5; color: white;"
-                        class="btn">SEND</button>
+                        class="btn btn-send">SEND</button>
                 </div>
             </div>
         </div>
@@ -280,6 +280,42 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.btn-send').click(function () {
+                const amount = $('.amount').val();
+                const receiver = $('.receiver').val();
+                if (!amount || !receiver) {
+                    alert('Please enter amount and receiver');
+                }
+                if (amount && receiver) {
+                    fetch('/transfer', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            amount: amount,
+                            receiver: receiver
+                        })
+                    }).then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Send success');
+                                window.location.reload();
+                            } else {
+                                alert('Send failed');
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            alert('Send failed');
+                        });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

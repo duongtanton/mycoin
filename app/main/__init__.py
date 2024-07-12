@@ -1,7 +1,7 @@
 import io
 import json
 from flask import Blueprint, render_template, send_file, request, jsonify, session, redirect
-from app.core.blockchain import generate_wallet, verify_password, blockChain
+from app.core.blockchain import generate_wallet, verify_password, blockChain, Transaction
 
 bp = Blueprint('main', __name__)
 
@@ -61,3 +61,16 @@ def wallet():
     balance = blockChain.get_balance(wallet["address"])
     return render_template('wallet.html', transactions=transactions, balance=balance)
     
+@bp.post('/transfer')
+def transfer():
+    if 'wallet' not in session:
+        return redirect('/sign-in')
+    global blockChain
+    wallet = session['wallet']
+    if request.is_json:
+        transaction = request.get_json()
+        transaction = Transaction(wallet["address"], transaction["receiver"], int(transaction["amount"]))
+        blockChain.add_transaction(transaction)
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400    
