@@ -10,6 +10,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import base64
+import random
 
 blockChain = None            
 
@@ -56,6 +57,16 @@ def hash(block):
     data = data.encode("utf-8")
     return sha256(data).hexdigest()
 
+def next_block(last_block, data):
+    block = Block(data)
+    block.prev_hash = last_block.hash
+    block.hash = hash(block)
+    return block
+class Validator:
+    def __init__(self, address, stake):
+        self.address = address
+        self.stake = stake
+        
 class BlockChain:
     def __init__(self):
         self.chain:list[Block] = []
@@ -63,17 +74,27 @@ class BlockChain:
         block.hash = hash(block)
         self.chain.append(block)
         self.temp_data:list[Transaction] = []
+        self.validators = {}
         
-    def add_block(self, data):
-        block = Block(data)
-        block.prev_hash = self.chain[-1].hash
-        while block.hash[:2] != "00":
-            block.none += 1
-            block.hash = hash(block)
-        block.hash = hash(block)
-        self.chain.append(block)   
-        self.temp_data = [] 
-
+    # def add_block(self, data):
+    #     block = Block(data)
+    #     block.prev_hash = self.chain[-1].hash
+    #     while block.hash[:2] != "00":
+    #         block.none += 1
+    #         block.hash = hash(block)
+    #     block.hash = hash(block)
+    #     self.chain.append(block)   
+    #     self.temp_data = [] 
+    
+    def add_block(self, validator_address):
+        if validator_address in self.validators:
+            last_block = self.chain[-1]
+            new_block = next_block(last_block, self.temp_data)
+            self.temp_data = []
+            self.chain.append(new_block)
+        else:
+            print("Invalid validator")
+            
     def is_valid(self):
         for i in range(1, len(self.chain)):
             if self.chain[i].hash != hash(self.chain[i]):
@@ -108,6 +129,18 @@ class BlockChain:
      
     def add_transaction(self, transaction):
         self.temp_data.append(transaction)
+
+    def register_validator(self, address, stake):
+        self.validators[address] = Validator(address, stake)
+
+    def select_validator(self):
+        total_stake = sum(validator.stake for validator in self.validators.values())
+        pick = random.uniform(0, total_stake)
+        current = 0
+        for validator in self.validators.values():
+            current += validator.stake
+            if current > pick:
+                return validator.address
 
 def generate_wallet(password):
     private_key = os.urandom(32)
@@ -188,13 +221,19 @@ def verify_password(wallet, password):
 def init_blockchain():
     global blockChain
     blockChain = BlockChain()
-    blockChain.add_block([Transaction("tonduong", "17qyQFhvqDurYVmqjWJMKTwBfQNWZx32B", 100)])
+    blockChain.register_validator("Validator1", 50)
+    blockChain.register_validator("Validator2", 30)
+    blockChain.register_validator("Validator3", 20)
+    blockChain.add_transaction(Transaction("tonduong", "17qyQFhvqDurYVmqjWJMKTwBfQNWZx32B", 100))
+    selected_validator = blockChain.select_validator()
+    blockChain.add_block(selected_validator)
     while True:
         time.sleep(5)
         print("Checking for new transactions")
         if len(blockChain.temp_data) > 0:
             print("New transactions found")
-            blockChain.add_block(blockChain.temp_data)
+            selected_validator = blockChain.select_validator()
+            blockChain.add_block(selected_validator)
     
     
    
