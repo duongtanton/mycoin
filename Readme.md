@@ -1,4 +1,4 @@
-# Bài tập cá nhân về Blockchain
+# Bài tập Blockchain
 
 ## Mô tả dự án
 
